@@ -1,6 +1,5 @@
 import pygame
 
-# Ball class
 class Ball:
     def __init__(self, x, y, dx, dy, radius):
         self.x = x
@@ -15,13 +14,12 @@ class Ball:
     def move(self):
         self.x += self.dx
         self.y += self.dy
-
-# Power-up class
+        
 class PowerUp:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.radius = 6
+        self.radius = 6 # powerup ball radius
         self.dy = 2
 
     def rect(self):

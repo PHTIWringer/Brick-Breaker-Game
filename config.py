@@ -1,7 +1,15 @@
 from objects import Ball
+import pygame
 
 # Screen setup
 WIDTH, HEIGHT = 800, 1000 # Viewport 
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Brick Breaker")
+clock = pygame.time.Clock()
+font = pygame.font.SysFont(None, 36)
+
+# Buttons
+clear_button = pygame.Rect(WIDTH - 160, HEIGHT - 45, 140, 30)
 
 # Colors
 WHITE = (255, 255, 255) # Ball normal state
@@ -30,4 +38,6 @@ horizontal_start_speed_per_frame = 0 # ball goes straight up at first touch
 vertical_speed_per_frame = -8 # negative means upward momentum
 ball_radius = 4 # size of ball * 2 for total diameter
 
-ball = Ball(horizontal_postion_start, vertical_postion_start, horizontal_start_speed_per_frame, vertical_speed_per_frame, ball_radius)
+ball = Ball(horizontal_postion_start, vertical_postion_start, horizontal_start_speed_per_frame, vertical_speed_per_frame, ball_radius) # arguments for Ball Class Init
+
+fireball = False # Fireball power inactive -- True on f key press in game

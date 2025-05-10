@@ -1,8 +1,5 @@
-import json
-import pygame
-import config
+import json, pygame, config, artwork
 from objects import Ball
-import artwork
 
 def save_layout(filename="Init_Map.json"):
     data = []
@@ -44,3 +41,7 @@ def reset_game():
 game_active = False
 show_win = False
 edit_mode = False
+
+# Mouse tracking
+mouse_down = False
+mouse_button = None  # 1=left, 2=middle, 3=right
