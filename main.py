@@ -12,6 +12,7 @@ game_state.unbreakable_bricks = []
 game_state.powerups = []
 game_state.balls = []
 game_state.reset_game()
+font = pygame.font.SysFont(None, 36)
 
 # Main loop
 while True:
@@ -152,20 +153,20 @@ while True:
             pygame.draw.line(config.screen, (40, 40, 40), (0, y), (config.WIDTH, y))
         pygame.draw.rect(config.screen, (80, 80, 80), config.clear_button)
         pygame.draw.rect(config.screen, config.WHITE, config.clear_button, 2)
-        clear_text = config.font.render("Clear Board", True, config.WHITE)
+        clear_text = font.render("Clear Board", True, config.WHITE)
         config.screen.blit(clear_text, (config.clear_button.x + 10, config.clear_button.y + 5))
 
     # UI text
     if not game_state.game_active and not game_state.show_win and not game_state.edit_mode:
-        msg = config.font.render("Press SPACE to Start", True, config.WHITE)
+        msg = font.render("Press SPACE to Start", True, config.WHITE)
         config.screen.blit(msg, (config.WIDTH // 2 - msg.get_width() // 2, config.HEIGHT // 2))
 
     if game_state.show_win:
-        msg = config.font.render("You Win! Press R to Reset", True, config.WHITE)
+        msg = font.render("You Win! Press R to Reset", True, config.WHITE)
         config.screen.blit(msg, (config.WIDTH // 2 - msg.get_width() // 2, config.HEIGHT // 2))
 
     if game_state.edit_mode:
-        msg = config.font.render("EDIT MODE (E to exit, S to save, L to load)", True, config.WHITE)
+        msg = font.render("EDIT MODE (E to exit, S to save, L to load)", True, config.WHITE)
         config.screen.blit(msg, (20, config.HEIGHT - 40))
 
     pygame.display.flip()

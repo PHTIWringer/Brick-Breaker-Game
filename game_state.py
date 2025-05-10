@@ -37,7 +37,6 @@ def reset_game():
     show_win = False
     artwork.paddle.x = config.WIDTH // 2 - config.paddle_width // 2
 
-# Game state
 game_active = False
 show_win = False
 edit_mode = False

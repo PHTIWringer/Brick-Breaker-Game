@@ -6,7 +6,6 @@ WIDTH, HEIGHT = 800, 1000 # Viewport
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Brick Breaker")
 clock = pygame.time.Clock()
-font = pygame.font.SysFont(None, 36)
 
 # Buttons
 clear_button = pygame.Rect(WIDTH - 160, HEIGHT - 45, 140, 30)
