@@ -1,6 +1,12 @@
 import json, pygame, config, artwork
-from objects import Ball
+from objects import Ball, Player
 from config import shared_ball_image
+
+try:
+    player1 = Player.load("Sawyer")
+except Exception as e:
+    print(f"Player load failed: {e}")
+    player1 = Player("Sawyer")
 
 def save_layout(filename="Init_Map.json"):
     data = []

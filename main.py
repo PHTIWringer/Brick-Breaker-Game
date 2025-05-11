@@ -13,13 +13,18 @@ game_state.powerups = []
 game_state.balls = []
 game_state.reset_game()
 font = pygame.font.SysFont(None, 36)
+last_minute_time = pygame.time.get_ticks()
+last_score = -1
+xp_awarded = False
 
 # Main loop
 while True:
     config.screen.fill((config.BLACK))
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            xp_earned = game_state.player1.convert_score_to_xp()
+            game_state.player1.save()
+            print(f"\nExiting... XP earned: {xp_earned:.1f} | Total XP: {game_state.player1.total_xp:.1f}")
             pygame.quit()
             sys.exit()
 
@@ -28,7 +33,10 @@ while True:
                 config.fireball = not config.fireball
             if event.key == pygame.K_SPACE and not game_state.game_active and not game_state.show_win:
                 game_state.reset_game()
+                xp_awarded = False
             if event.key == pygame.K_r and show_win:
+                xp_earned = game_state.player1.convert_score_to_xp()
+                print(f"\nGame Over. XP earned: {xp_earned:.1f} | Total XP: {game_state.player1.total_xp:.1f}")
                 game_state.reset_game()
             if event.key == pygame.K_e:
                 game_state.edit_mode = not game_state.edit_mode
@@ -65,6 +73,11 @@ while True:
         artwork.paddle.x += config.paddle_speed
 
     if game_state.game_active:
+        current_time = pygame.time.get_ticks()
+        if current_time - last_minute_time >= 60000:
+            game_state.player1.add_score(100)
+            last_minute_time = current_time
+
         for ball in game_state.balls[:]:
             ball.move()
             if ball.x - ball.radius <= 0 or ball.x + ball.radius >= config.WIDTH:
@@ -91,6 +104,8 @@ while True:
                         elif abs(ball.rect().left - brick.right) < 10 and ball.dx < 0:
                             ball.dx *= -1
                     game_state.bricks.remove(brick)
+                    game_state.player1.add_score(1)
+
                     if random.random() < 0.02: # % chance to spawn yellow ball
                         game_state.powerups.append(PowerUp(brick.centerx, brick.centery))
                     if random.random() < 0.02: # % chance to spawn new ball
@@ -128,6 +143,8 @@ while True:
         if not game_state.balls:
             game_state.game_active = False
         if not game_state.bricks and not show_win:
+           # xp_earned = game_state.player1.convert_score_to_xp()
+            #print(f"\n🏆 You won! XP earned: {xp_earned:.1f} | Total XP: {game_state.player1.total_xp:.1f}")
             show_win = True
             game_state.game_active = False
 
@@ -160,6 +177,11 @@ while True:
     if not game_state.game_active and not game_state.show_win and not game_state.edit_mode:
         msg = font.render("Press SPACE to Start", True, config.WHITE)
         config.screen.blit(msg, (config.WIDTH // 2 - msg.get_width() // 2, config.HEIGHT // 2))
+        
+        if not xp_awarded:
+            xp_earned = game_state.player1.convert_score_to_xp()
+            print(f"\nGame ended. XP earned: {xp_earned:.1f} | Total XP: {game_state.player1.total_xp:.1f}")
+            xp_awarded = True
 
     if game_state.show_win:
         msg = font.render("You Win! Press R to Reset", True, config.WHITE)
@@ -168,6 +190,10 @@ while True:
     if game_state.edit_mode:
         msg = font.render("EDIT MODE (E to exit, S to save, L to load)", True, config.WHITE)
         config.screen.blit(msg, (20, config.HEIGHT - 40))
+
+    if game_state.player1 != last_score:
+        print(f"Score: {game_state.player1.score}", end='\r')
+        last_score = game_state.player1.score
 
     pygame.display.flip()
     config.clock.tick(60)
