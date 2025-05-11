@@ -65,55 +65,55 @@ while True:
         artwork.paddle.x += config.paddle_speed
 
     if game_state.game_active:
-        for config.ball in game_state.balls[:]:
-            config.ball.move()
-            if config.ball.x - config.ball.radius <= 0 or config.ball.x + config.ball.radius >= config.WIDTH:
-                config.ball.dx *= -1
-                config.ball.x = max(ball.radius, min(config.ball.x, config.WIDTH - config.ball.radius))
-            if config.ball.y - config.ball.radius <= 0:
-                config.ball.dy *= -1
-                config.ball.y = config.ball.radius
+        for ball in game_state.balls[:]:
+            ball.move()
+            if ball.x - ball.radius <= 0 or ball.x + ball.radius >= config.WIDTH:
+                ball.dx *= -1
+                ball.x = max(ball.radius, min(ball.x, config.WIDTH - ball.radius))
+            if ball.y - ball.radius <= 0:
+                ball.dy *= -1
+                ball.y = ball.radius
 
-            if artwork.paddle.colliderect(config.ball.rect()):
-                config.ball.dy = -abs(config.ball.dy)
-                offset = (config.ball.x - artwork.paddle.centerx) / (artwork.paddle.width / 2)
-                config.ball.dx = 5 * offset
+            if artwork.paddle.colliderect(ball.rect()):
+                ball.dy = -abs(ball.dy)
+                offset = (ball.x - artwork.paddle.centerx) / (artwork.paddle.width / 2)
+                ball.dx = 5 * offset
 
             for brick in game_state.bricks[:]:
-                if brick.colliderect(config.ball.rect()):
+                if brick.colliderect(ball.rect()):
                     if not config.fireball:
-                        if abs(ball.rect().bottom - brick.top) < 10 and config.ball.dy > 0:
-                            config.ball.dy *= -1
-                        elif abs(config.ball.rect().top - brick.bottom) < 10 and config.ball.dy < 0:
-                            config.ball.dy *= -1
-                        elif abs(config.ball.rect().right - brick.left) < 10 and config.ball.dx > 0:
-                            config.ball.dx *= -1
-                        elif abs(config.ball.rect().left - brick.right) < 10 and config.ball.dx < 0:
-                            config.ball.dx *= -1
+                        if abs(ball.rect().bottom - brick.top) < 10 and ball.dy > 0:
+                            ball.dy *= -1
+                        elif abs(ball.rect().top - brick.bottom) < 10 and ball.dy < 0:
+                            ball.dy *= -1
+                        elif abs(ball.rect().right - brick.left) < 10 and ball.dx > 0:
+                            ball.dx *= -1
+                        elif abs(ball.rect().left - brick.right) < 10 and ball.dx < 0:
+                            ball.dx *= -1
                     game_state.bricks.remove(brick)
                     if random.random() < 0.02: # % chance to spawn yellow ball
                         game_state.powerups.append(PowerUp(brick.centerx, brick.centery))
                     if random.random() < 0.02: # % chance to spawn new ball
-                        game_state.balls.append(Ball(config.ball.x, config.ball.y, random.choice([-4, 8]), -8, config.ball_radius))
+                        game_state.balls.append(Ball(ball.x, ball.y, random.choice([-4, 8]), -8, config.ball_radius, image=config.shared_ball_image))
                     break
 
             for ubrick in game_state.unbreakable_bricks:
-                if ubrick.colliderect(config.ball.rect()):
-                    if abs(config.ball.rect().bottom - ubrick.top) < 10 and config.ball.dy > 0:
-                        config.ball.dy *= -1
-                        config.ball.y = ubrick.top - config.ball.radius
-                    elif abs(config.ball.rect().top - ubrick.bottom) < 10 and config.ball.dy < 0:
-                        config.ball.dy *= -1
-                        config.ball.y = ubrick.bottom + config.ball.radius
-                    elif abs(config.ball.rect().right - ubrick.left) < 10 and config.ball.dx > 0:
-                        config.ball.dx *= -1
-                        config.ball.x = ubrick.left - config.ball.radius
-                    elif abs(config.ball.rect().left - ubrick.right) < 10 and config.ball.dx < 0:
-                        config.ball.dx *= -1
-                        config.ball.x = ubrick.right + config.ball.radius
+                if ubrick.colliderect(ball.rect()):
+                    if abs(ball.rect().bottom - ubrick.top) < 10 and ball.dy > 0:
+                        ball.dy *= -1
+                        ball.y = ubrick.top - ball.radius
+                    elif abs(ball.rect().top - ubrick.bottom) < 10 and ball.dy < 0:
+                        ball.dy *= -1
+                        ball.y = ubrick.bottom + ball.radius
+                    elif abs(ball.rect().right - ubrick.left) < 10 and ball.dx > 0:
+                        ball.dx *= -1
+                        ball.x = ubrick.left - ball.radius
+                    elif abs(ball.rect().left - ubrick.right) < 10 and ball.dx < 0:
+                        ball.dx *= -1
+                        ball.x = ubrick.right + config.ball.radius
 
-            if config.ball.y - config.ball.radius > config.HEIGHT:
-                game_state.balls.remove(config.ball)
+            if ball.y - ball.radius > config.HEIGHT:
+                game_state.balls.remove(ball)
 
         for p in game_state.powerups[:]:
             p.move()
@@ -121,7 +121,7 @@ while True:
                 game_state.powerups.remove(p)
                 if game_state.balls:
                     ref = game_state.balls[0]
-                    game_state.balls.append(Ball(ref.x, ref.y, random.choice([-4, 8]), -8, config.ball_radius))
+                    game_state.balls.append(Ball(ref.x, ref.y, random.choice([-4, 8]), -8, config.ball_radius, image=config.shared_ball_image))
             elif p.y - p.radius > config.HEIGHT:
                 game_state.powerups.remove(p)
 
@@ -134,7 +134,7 @@ while True:
     # Draw game objects
     pygame.draw.rect(config.screen, config.BLUE, artwork.paddle)
     for ball in game_state.balls:
-        pygame.draw.circle(config.screen, config.RED if config.fireball else config.WHITE, (int(ball.x), int(ball.y)), ball.radius)
+        ball.draw(config.screen)
     for brick in game_state.bricks:
         pygame.draw.rect(config.screen, config.BRICK_COLOR, brick)
         pygame.draw.rect(config.screen, config.BLACK, brick, 1)

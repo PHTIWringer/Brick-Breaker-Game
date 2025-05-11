@@ -1,5 +1,6 @@
 import json, pygame, config, artwork
 from objects import Ball
+from config import shared_ball_image
 
 def save_layout(filename="Init_Map.json"):
     data = []
@@ -30,7 +31,7 @@ def reset_game():
     global balls, bricks, unbreakable_bricks, powerups, game_active, show_win, artwork
     ball_start_x = artwork.paddle.x + config.paddle_width // 2
     ball_start_y = artwork.paddle.y - 10
-    balls = [Ball(ball_start_x, ball_start_y, 0, -8, config.ball_radius)]
+    balls = [Ball(ball_start_x, ball_start_y, 0, -8, config.ball_radius, image=shared_ball_image)]
     powerups = []
     load_layout("Init_Map.json")
     game_active = True

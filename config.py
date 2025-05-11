@@ -7,6 +7,9 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Brick Breaker")
 clock = pygame.time.Clock()
 
+# Ball Sprite
+shared_ball_image = pygame.image.load("E:/VSCode Files/Brick Breaker Game/Ball_Image.png").convert_alpha()
+
 # Buttons
 clear_button = pygame.Rect(WIDTH - 160, HEIGHT - 45, 140, 30)
 
@@ -31,12 +34,15 @@ y_coord = 30 # near bottom (30 pixels from bottom of viewport)
 paddle_centering = 2 # do not change (viewport width divided by '2' to center)
 
 # Ball settings
+
 horizontal_postion_start = 400 # Centered
 vertical_postion_start = 500 # pixels above paddle
 horizontal_start_speed_per_frame = 0 # ball goes straight up at first touch
 vertical_speed_per_frame = -8 # negative means upward momentum
-ball_radius = 4 # size of ball * 2 for total diameter
+ball_radius = 8 # size of ball * 2 for total diameter
 
-ball = Ball(horizontal_postion_start, vertical_postion_start, horizontal_start_speed_per_frame, vertical_speed_per_frame, ball_radius) # arguments for Ball Class Init
+shared_ball_image = pygame.transform.scale(shared_ball_image, (ball_radius * 2, ball_radius * 2))
+
+ball = Ball(horizontal_postion_start, vertical_postion_start, horizontal_start_speed_per_frame, vertical_speed_per_frame, ball_radius, image=shared_ball_image) # arguments for Ball Class Init
 
 fireball = False # Fireball power inactive -- True on f key press in game
